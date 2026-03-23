@@ -1,18 +1,27 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTask } from "../tasksSlice";
 
-export default function TaskForm({ onAdd }) {
+export default function TaskForm() {
+  const dispatch = useDispatch();
   const [text, setText] = useState("");
   const [tagsText, setTagsText] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const trimmedText = text.trim();
+
+    if (!trimmedText) {
+      return;
+    }
 
     const tags = tagsText
       .split(",")
-      .map((t) => t.trim())
+      .map((tag) => tag.trim())
       .filter(Boolean);
 
-    onAdd({ text, tags });
+    dispatch(addTask({ text: trimmedText, tags }));
     setText("");
     setTagsText("");
   }
@@ -22,15 +31,15 @@ export default function TaskForm({ onAdd }) {
       <input
         className="input"
         value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Введите задачу…"
+        onChange={(event) => setText(event.target.value)}
+        placeholder="Введите задачу..."
       />
 
       <input
         className="input"
         value={tagsText}
-        onChange={(e) => setTagsText(e.target.value)}
-        placeholder="Теги (через запятую), напр. учеба,дом"
+        onChange={(event) => setTagsText(event.target.value)}
+        placeholder="Теги через запятую, например: учеба, дом"
       />
 
       <button className="btn" type="submit">

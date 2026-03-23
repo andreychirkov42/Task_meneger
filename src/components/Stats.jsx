@@ -1,4 +1,9 @@
-export default function Stats({ total, active, done }) {
+import { useSelector } from "react-redux";
+import { selectTaskStats } from "../tasksSlice";
+
+export default function Stats() {
+  const { total, active, done } = useSelector(selectTaskStats);
+
   return (
     <div className="stats">
       <div className="pill">

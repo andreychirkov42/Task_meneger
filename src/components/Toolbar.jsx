@@ -1,25 +1,33 @@
-export default function Toolbar({
-  query,
-  onQueryChange,
-  filter,
-  onFilterChange,
-  onClearCompleted,
-  hasCompleted,
-}) {
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearCompletedTasks,
+  selectHasCompletedTasks,
+  selectTaskFilter,
+  selectTaskQuery,
+  setTaskFilter,
+  setTaskQuery,
+} from "../tasksSlice";
+
+export default function Toolbar() {
+  const dispatch = useDispatch();
+  const query = useSelector(selectTaskQuery);
+  const filter = useSelector(selectTaskFilter);
+  const hasCompleted = useSelector(selectHasCompletedTasks);
+
   return (
     <div className="toolbar">
       <input
         className="input"
         value={query}
-        onChange={(e) => onQueryChange(e.target.value)}
-        placeholder="Поиск по тексту или тегам…"
+        onChange={(event) => dispatch(setTaskQuery(event.target.value))}
+        placeholder="Поиск по тексту или тегам..."
       />
 
       <div className="toolbarRight">
         <select
           className="select"
           value={filter}
-          onChange={(e) => onFilterChange(e.target.value)}
+          onChange={(event) => dispatch(setTaskFilter(event.target.value))}
         >
           <option value="all">Все</option>
           <option value="active">Активные</option>
@@ -28,7 +36,7 @@ export default function Toolbar({
 
         <button
           className="btn btnGhost"
-          onClick={onClearCompleted}
+          onClick={() => dispatch(clearCompletedTasks())}
           disabled={!hasCompleted}
           type="button"
           title="Удалить все выполненные"
